@@ -1,0 +1,26 @@
+# Program
+gpus: [2,3]
+seed: 1
+
+# Visualization
+visualize_sample: 0
+visualize_class: 0
+visualize_stream: 0
+visualize_frames: []
+
+# Data Loader
+subset: 'cs'
+max_frame: 300
+batch_size: 16
+data_transform: True
+
+# Model
+pretrained: True
+model_stream: 2
+gcn_kernel_size: [5,2]
+drop_prob: 0.5
+
+# Optimizer
+max_epoch: 50
+learning_rate: 0.1
+adjust_lr: [10,30]
