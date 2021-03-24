@@ -31,15 +31,16 @@ def main():
     v = vars(args)
     for i in v.keys():
         print('{}: {}'.format(i, v[i]))
-    print('************************************************\n')
 
     if type(args.gpus) == int:
         n = args.gpus
-        if n ==4 :
-            args.gpus = [0,1,2,3]
+        if n == 4:
+            args.gpus = [0, 1, 2, 3]
         else:
             args.gpus = [0]
 
+    print('gpus:', args.gpus)
+    print('************************************************\n')
     # Processing
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(list(map(str, args.gpus)))
     if args.visualization:
@@ -54,14 +55,15 @@ def main():
         v.show_heatmap()
         v.show_skeleton()
         print('Finish visualizing!')
-        
+
     else:
         p = Processor(args)
         p.start()
 
 
 def Init_parameters():
-    parser = argparse.ArgumentParser(description='Richly Activated Graph Convolutional Network (RA-GCN) for Skeleton-based Action Recognition')
+    parser = argparse.ArgumentParser(
+        description='Richly Activated Graph Convolutional Network (RA-GCN) for Skeleton-based Action Recognition')
 
     # Config
     parser.add_argument('--config', '-c', type=str, default='', help='ID of the using config', required=True)
@@ -79,20 +81,22 @@ def Init_parameters():
 
     # Visualization
     parser.add_argument('--visualize_sample', '-vs', type=int, default=0, help='select sample from 0 ~ batch_size-1')
-    parser.add_argument('--visualize_class', '-vc', type=int, default=0, help='select class from 0 ~ 60, 0 means actural class')
+    parser.add_argument('--visualize_class', '-vc', type=int, default=0,
+                        help='select class from 0 ~ 60, 0 means actural class')
     parser.add_argument('--visualize_stream', '-vb', type=int, default=0, help='select stream from 0 ~ model_stream-1')
-    parser.add_argument('--visualize_frames', '-vf', type=int, default=[], nargs='+', 
+    parser.add_argument('--visualize_frames', '-vf', type=int, default=[], nargs='+',
                         help='show specific frames from 0 ~ max_frame-1')
 
     # Dataloader
-    parser.add_argument('--subset', '-ss', type=str, default='cs', choices=['cs', 'cv'], help='benchmark of NTU dataset')
+    parser.add_argument('--subset', '-ss', type=str, default='cs', choices=['cs', 'cv'],
+                        help='benchmark of NTU dataset')
     parser.add_argument('--max_frame', '-mf', type=int, default=300, help='max frame number')
     parser.add_argument('--batch_size', '-bs', type=int, default=256, help='batch size')
-    parser.add_argument('--data_transform', '-dt', type=U.str2bool, default=True, 
+    parser.add_argument('--data_transform', '-dt', type=U.str2bool, default=True,
                         help='channel 0~2: original data, channel 3~5: next_frame - now_frame, channel 6~8: skeletons_all - skeleton_2')
-    parser.add_argument('--occlusion_part', '-op', type=int, nargs='+', default=[], choices=[1, 2, 3, 4, 5], 
+    parser.add_argument('--occlusion_part', '-op', type=int, nargs='+', default=[], choices=[1, 2, 3, 4, 5],
                         help='1:left arm, 2:right arm, 3:two hands, 4:two legs, 5:trunk')
-    parser.add_argument('--occlusion_time', '-ot', type=int, default=0, 
+    parser.add_argument('--occlusion_time', '-ot', type=int, default=0,
                         help='0 to 100, number of occlusion frames in first 100 frames')
     parser.add_argument('--occlusion_block', '-ob', type=int, default=0, help='1 to 6, occlusion threshold')
     parser.add_argument('--occlusion_rand', '-or', type=float, default=0, help='probability of random occlusion')
@@ -101,19 +105,20 @@ def Init_parameters():
     parser.add_argument('--sigma', type=float, default=0, help='std of jittering')
 
     # Model
-    parser.add_argument('--pretrained', '-pt', type=U.str2bool, default=False, help='load pretrained baseline for each stream')
+    parser.add_argument('--pretrained', '-pt', type=U.str2bool, default=False,
+                        help='load pretrained baseline for each stream')
     parser.add_argument('--model_stream', '-ms', type=int, default=3, help='number of model streames')
-    parser.add_argument('--gcn_kernel_size', '-ks', type=int, nargs='+', default=[5,2], help='[temporal_window_size, spatial_max_distance]')
+    parser.add_argument('--gcn_kernel_size', '-ks', type=int, nargs='+', default=[5, 2],
+                        help='[temporal_window_size, spatial_max_distance]')
     parser.add_argument('--drop_prob', '-dp', type=int, default=0.5, help='dropout probability')
 
     # Optimizer
     parser.add_argument('--max_epoch', '-me', type=int, default=50, help='max training epoch')
     parser.add_argument('--learning_rate', '-lr', type=int, default=0.1, help='initial learning rate')
-    parser.add_argument('--adjust_lr', '-al', type=int, nargs='+', default=[10,30], help='divide learning rate by 10')
+    parser.add_argument('--adjust_lr', '-al', type=int, nargs='+', default=[10, 30], help='divide learning rate by 10')
 
     return parser
 
 
 if __name__ == '__main__':
     main()
-

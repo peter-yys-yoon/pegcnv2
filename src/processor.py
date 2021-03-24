@@ -131,16 +131,12 @@ class Processor():
             num_sample += x.shape[0]
 
             # Print Loss
-            print('Epoch: {}/{}, Batch: {}/{}, Loss: {:.4f}'.format(
-                epoch+1, self.args.max_epoch, num+1, len(self.train_loader), loss))
+            name_desc.update(1)
+            name_desc.set_description('Epoch: {}/{}, Loss: {:.4f}'.format(
+                epoch+1, self.args.max_epoch, loss))
+            # print('Epoch: {}/{}, Batch: {}/{}, Loss: {:.4f}'.format(epoch+1, self.args.max_epoch, num+1, len(self.train_loader), loss))
 
-
-
-        state_dict = self.model.state_dict()
-        weights = OrderedDict([[k.split('module.')[-1],
-                                v.cpu()] for k, v in state_dict.items()])
-        torch.save(weights, 'test'+str(epoch) + '-' + str(int(num)) + '.pt')
-
+        name_desc.close()
         return acc / num_sample * 100
 
 
@@ -230,8 +226,16 @@ class Processor():
                         is_best = True
 
                 # Saving model
-                U.save_checkpoint(self.model.module.state_dict(), self.optimizer.state_dict(), 
-                    epoch+1, best_acc, is_best, self.model_name)
+                is_parallel = isinstance(self.model, nn.DataParallel)
+
+                if is_parallel:
+                    model_dict = self.model.module.state_dict()
+                else:
+                    model_dict = self.model.state_dict()
+
+                U.save_checkpoint(model_dict, self.optimizer.state_dict(),
+                        epoch+1, best_acc, is_best, self.model_name)
+
             print('Finish training!')
             print('Best accuracy: {:2.2f}%, Total time: {:.4f}s'.format(best_acc, time.time()-start_time))
 

@@ -14,7 +14,7 @@ def check_gpu(gpus):
             print('GPU{} used: {}M'.format(i, memused))
             if memused > 5000:
                 pynvml.nvmlShutdown()
-                raise ValueError('GPU{} is occupied!'.format(i))
+                raise ValueError('Mem used {}, GPU{} is occupied!'.format(memused, i))
         pynvml.nvmlShutdown()
         return torch.device('cuda')
     else:
@@ -23,8 +23,8 @@ def check_gpu(gpus):
 
 
 def load_checkpoint(fname='checkpoint'):
-    fpath = './models/' + fname + '.pth.tar'
-    # fpath = './models/checkpoint.pth.tar'
+    # fpath = './models/' + fname + '.pth.tar'
+    fpath = './models/checkpoint.pth.tar'
     print('>>>>>> loading', fpath)
     if os.path.isfile(fpath):
         checkpoint = torch.load(fpath)
