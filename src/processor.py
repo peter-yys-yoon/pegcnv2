@@ -99,6 +99,8 @@ class Processor():
     # Training
     def train(self, epoch):
         acc, num_sample = 0, 0
+        name_desc = tqdm(range(len(self.train_loader)))
+
         for num, (x, _, y, _) in enumerate(self.train_loader):
 
             # Using GPU

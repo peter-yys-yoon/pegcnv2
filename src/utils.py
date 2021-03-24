@@ -24,8 +24,12 @@ def check_gpu(gpus):
 
 def load_checkpoint(fname='checkpoint'):
     fpath = './models/' + fname + '.pth.tar'
+    # fpath = './models/checkpoint.pth.tar'
+    print('>>>>>> loading', fpath)
     if os.path.isfile(fpath):
         checkpoint = torch.load(fpath)
+        # import pdb
+        # pdb.set_trace()
         return checkpoint
     else:
         raise ValueError('Do NOT exist this checkpoint: {}'.format(fname))

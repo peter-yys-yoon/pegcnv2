@@ -33,10 +33,15 @@ def main():
         print('{}: {}'.format(i, v[i]))
     print('************************************************\n')
 
+    if type(args.gpus) == int:
+        n = args.gpus
+        if n ==4 :
+            args.gpus = [0,1,2,3]
+        else:
+            args.gpus = [0]
+
     # Processing
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(list(map(str, args.gpus)))
-
-
     if args.visualization:
         if args.extract:
             p = Processor(args)
@@ -68,7 +73,8 @@ def Init_parameters():
     parser.add_argument('--visualization', '-v', default=False, action='store_true', help='Visualization')
 
     # Program
-    parser.add_argument('--gpus', '-g', type=int, nargs='+', default=[], help='Using GPUs')
+    # parser.add_argument('--gpus', '-g', type=int, nargs='+', default=[], help='Using GPUs')
+    parser.add_argument('--gpus', '-g', type=int, default=0, help='Using GPUs')
     parser.add_argument('--seed', '-s', type=int, default=1, help='Random seed')
 
     # Visualization
