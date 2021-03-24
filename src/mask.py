@@ -22,7 +22,26 @@ class Mask(nn.Module):
                     mask *= mask_matrices[j]
             mask = torch.cat([mask.unsqueeze(1)] * 4, dim=1)
             self.module.mask_stream[i].data = mask.view(-1).detach()
-    
+            # print(">>>>>>>>>>>>>>>mask.py", mask.shape)
+            # print(">>>>>>>>>>>>>>>mask.py", mask.view(-1).shape, mask.view(-1)[0:10])
+            """
+            model_stream = 3
+            
+            i = 1 to 3
+            j= 0 to i
+            
+            i =1, j = 0 to 1  
+                j=0 , mask[0]
+            i = 2, j= 0 to 2
+                j=0, mask[0]
+                j=1, mask[0]*mask[1]
+            
+            if cell contains zero at any J then result will be zero.
+            
+            
+            """
+
+
     def CAM(self, weight, feature):
         N, C = weight.shape
         weight = weight.view(N, C, 1, 1, 1).expand_as(feature)

@@ -35,21 +35,28 @@ class RA_GCN(nn.Module):
         # multi stream
         out = []
         feature = []
+        count = 1
+
         for stgcn, mask in zip(self.stgcn_stream, self.mask_stream):
             x = inp
 
             # mask
             N, C, T, V, M = x.shape
             x = x.view(N, C, -1)
+
+            # print('RA GCN Stream: ' , count)
+            # print('\tinput X shape: ', x.shape)
+            # print('\tmask shape: ' , mask.shape, mask[:6])
             x = x * mask[None,None,:]
             x = x.view(N, C, T, V, M)
 
-            # baseline
+
             temp_out, temp_feature = stgcn(x)
 
             # output
             out.append(temp_out.unsqueeze(-1))
             feature.append(temp_feature[0])
+            count +=1
         return out, feature
 
 

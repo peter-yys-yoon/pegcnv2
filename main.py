@@ -25,7 +25,6 @@ def main():
 
     # Update parameters by cmd
     args = parser.parse_args()
-
     # Show parameters
     print('\n************************************************')
     print('The running config is presented as follows:')
@@ -36,6 +35,8 @@ def main():
 
     # Processing
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(list(map(str, args.gpus)))
+
+
     if args.visualization:
         if args.extract:
             p = Processor(args)
@@ -80,7 +81,7 @@ def Init_parameters():
     # Dataloader
     parser.add_argument('--subset', '-ss', type=str, default='cs', choices=['cs', 'cv'], help='benchmark of NTU dataset')
     parser.add_argument('--max_frame', '-mf', type=int, default=300, help='max frame number')
-    parser.add_argument('--batch_size', '-bs', type=int, default=16, help='batch size')
+    parser.add_argument('--batch_size', '-bs', type=int, default=256, help='batch size')
     parser.add_argument('--data_transform', '-dt', type=U.str2bool, default=True, 
                         help='channel 0~2: original data, channel 3~5: next_frame - now_frame, channel 6~8: skeletons_all - skeleton_2')
     parser.add_argument('--occlusion_part', '-op', type=int, nargs='+', default=[], choices=[1, 2, 3, 4, 5], 
@@ -94,7 +95,7 @@ def Init_parameters():
     parser.add_argument('--sigma', type=float, default=0, help='std of jittering')
 
     # Model
-    parser.add_argument('--pretrained', '-pt', type=U.str2bool, default=True, help='load pretrained baseline for each stream')
+    parser.add_argument('--pretrained', '-pt', type=U.str2bool, default=False, help='load pretrained baseline for each stream')
     parser.add_argument('--model_stream', '-ms', type=int, default=3, help='number of model streames')
     parser.add_argument('--gcn_kernel_size', '-ks', type=int, nargs='+', default=[5,2], help='[temporal_window_size, spatial_max_distance]')
     parser.add_argument('--drop_prob', '-dp', type=int, default=0.5, help='dropout probability')

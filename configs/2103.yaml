@@ -1,5 +1,5 @@
 # Program
-gpus: [2,3]
+gpus: [0,1,2,3]
 seed: 1
 
 # Visualization
@@ -11,7 +11,7 @@ visualize_frames: []
 # Data Loader
 subset: 'cset'
 max_frame: 300
-batch_size: 16
+batch_size: 48
 data_transform: True
 
 # Model

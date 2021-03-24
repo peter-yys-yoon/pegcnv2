@@ -1,2 +1,4 @@
 models
 .idea
+src/__pycache__
+*.pt

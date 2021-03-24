@@ -10,10 +10,10 @@ class Data_transform():
         if self.data_transform:
             C, T, V, M = x.shape
             x_new = np.zeros((C*3, T, V, M))
-            x_new[:C,:,:,:] = x
-            for i in range(T-1):
+            x_new[:C,:,:,:] = x # First 0~C contains original X
+            for i in range(T-1): # Second between C~2C contains temporal difference
                 x_new[C:(2*C),i,:,:] = x[:,i+1,:,:] - x[:,i,:,:]
-            for i in range(V):
+            for i in range(V): # final 2C~3C contains bone information
                 x_new[(2*C):,:,i,:] = x[:,:,i,:] - x[:,:,1,:]
             return (x_new, location)
         else:

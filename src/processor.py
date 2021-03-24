@@ -13,7 +13,8 @@ from src.dataprocessor import *
 from src.graph import Graph
 from src.nets import RA_GCN
 from src.mask import Mask
-
+from tqdm import tqdm
+from collections import OrderedDict
 
 class Processor():
     def __init__(self, args):
@@ -103,7 +104,7 @@ class Processor():
             # Using GPU
             x = x.to(self.device)
             y = y.to(self.device)
-
+            # print('x' , x.shape)
             # Calculating Output
             out_stream, feature = self.model(x)
             out = torch.sum(torch.cat(out_stream, dim=-1), dim=-1)
@@ -131,6 +132,13 @@ class Processor():
             print('Epoch: {}/{}, Batch: {}/{}, Loss: {:.4f}'.format(
                 epoch+1, self.args.max_epoch, num+1, len(self.train_loader), loss))
 
+
+
+        state_dict = self.model.state_dict()
+        weights = OrderedDict([[k.split('module.')[-1],
+                                v.cpu()] for k, v in state_dict.items()])
+        torch.save(weights, 'test'+str(epoch) + '-' + str(int(num)) + '.pt')
+
         return acc / num_sample * 100
 
 
@@ -138,7 +146,9 @@ class Processor():
     def eval(self):
         with torch.no_grad():
             acc, num_sample = 0, 0
+            name_desc = tqdm(range(len(self.eval_loader)))
             for num, (x, _, y, _) in enumerate(self.eval_loader):
+                # print('eval, data shape: ', x.shape)
 
                 # Using GPU
                 x = x.to(self.device)
@@ -154,8 +164,9 @@ class Processor():
                 num_sample += x.shape[0]
 
                 # Print Progress
-                print('Batch: {}/{}'.format(num+1, len(self.eval_loader)))
-
+                name_desc.update(1)
+                # print('Batch: {}/{}'.format(num+1, len(self.eval_loader)))
+        name_desc.close()
         return acc / num_sample * 100
 
 
