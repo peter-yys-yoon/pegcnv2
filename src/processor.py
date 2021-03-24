@@ -62,6 +62,7 @@ class Processor():
         self.model_name = str(args.config)+'_'+str(args.model_stream)+'s_RA-GCN_NTU'+args.subset
         self.model = RA_GCN(data_shape, num_class, A, args.drop_prob, args.gcn_kernel_size,
             args.model_stream, args.subset, args.pretrained).to(self.device)
+
         self.model = nn.DataParallel(self.model)
 
         # Optimizer Setting
@@ -110,10 +111,12 @@ class Processor():
             # Calculating Output
             out_stream, feature = self.model(x)
             out = torch.sum(torch.cat(out_stream, dim=-1), dim=-1)
-
+            # print('before masking', self.model.module.mask_stream[1].cpu().detach().numpy()[:5])
             # update mask matrices
             weight = self.get_weights(y)
             self.mask_func(weight, feature)
+
+            # print('after masking', self.model.module.mask_stream[1].cpu().detach().numpy()[:5])
 
             # Calculating Loss
             loss = self.loss_func(out, y)
@@ -130,6 +133,7 @@ class Processor():
             acc += pred.eq(y.view_as(pred)).sum().item()
             num_sample += x.shape[0]
 
+            # print('after loss backward', self.model.module.mask_stream[1].cpu().detach().numpy()[:5])
             # Print Loss
             name_desc.update(1)
             name_desc.set_description('Epoch: {}/{}, Loss: {:.4f}'.format(

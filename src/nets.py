@@ -14,7 +14,7 @@ class RA_GCN(nn.Module):
 
         # baseline
         self.stgcn_stream = nn.ModuleList((
-            ST_GCN(data_shape, num_class, A, drop_prob, gcn_kernel_size) 
+            ST_GCN(data_shape, num_class, A, drop_prob, gcn_kernel_size)
             for _ in range(model_stream)
         ))
 
@@ -23,6 +23,7 @@ class RA_GCN(nn.Module):
             for stgcn in self.stgcn_stream:
                 checkpoint = U.load_checkpoint('baseline_NTU' + subset)
                 stgcn.load_state_dict(checkpoint['model'])
+                # stgcn.module.load_state_dict(checkpoint['model'])
 
         # mask
         self.mask_stream = nn.ParameterList([

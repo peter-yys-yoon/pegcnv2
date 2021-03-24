@@ -21,6 +21,7 @@ class Mask(nn.Module):
                 else:
                     mask *= mask_matrices[j]
             mask = torch.cat([mask.unsqueeze(1)] * 4, dim=1)
+            # print('mask forward ', mask.view(-1).cpu().detach().numpy()[0:5])
             self.module.mask_stream[i].data = mask.view(-1).detach()
             # print(">>>>>>>>>>>>>>>mask.py", mask.shape)
             # print(">>>>>>>>>>>>>>>mask.py", mask.view(-1).shape, mask.view(-1)[0:10])
