@@ -12,7 +12,7 @@ def check_gpu(gpus):
             meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
             memused = meminfo.used / 1024 / 1024
             print('GPU{} used: {}M'.format(i, memused))
-            if memused > 1000:
+            if memused > 5000:
                 pynvml.nvmlShutdown()
                 raise ValueError('GPU{} is occupied!'.format(i))
         pynvml.nvmlShutdown()
