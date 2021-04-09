@@ -132,9 +132,9 @@ class NTU(Dataset):
                 new_data[:,i,:,:] = data[:,r+s*i,:,:]
             data = new_data
 
-        data =np.expand_dims(data, 0)
-        data = self.pre_normalization(data)
-        data = data[0]
+        # data =np.expand_dims(data, 0)
+        # data = self.pre_normalization(data)
+        # data = data[0]
         if self.transform:
             (data, location) = self.transform((data, location))
 

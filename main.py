@@ -4,6 +4,7 @@ import argparse
 
 import src.utils as U
 from src.processor import Processor
+from src.processor_bs import Processor_BS
 from src.visualizer import Visualizer
 
 
@@ -27,11 +28,6 @@ def main():
     args = parser.parse_args()
     # Show parameters
     print('\n************************************************')
-    print('The running config is presented as follows:')
-    v = vars(args)
-    for i in v.keys():
-        print('{}: {}'.format(i, v[i]))
-
     if type(args.gpus) == int:
         n = args.gpus
         if n == 4:
@@ -39,7 +35,25 @@ def main():
         else:
             args.gpus = [0]
 
-    print('gpus:', args.gpus)
+    print('The running config is presented as follows:')
+    print_default_keys = ['config', 'batch_size', 'pretrained', 'model_stream', 'gpus']
+    print_eval_keys = ['occlusion_part', 'occlusion_time', 'occlusion_block', 'occlusion_rand',
+                       'jittering_joint', 'jittering_frame', 'sigma']
+
+    v = vars(args)
+    for i in v.keys():
+        if i in print_default_keys:
+            print('{}: {}'.format(i, v[i]))
+
+    if args.evaluate:
+        for i in v.keys():
+            if i in print_eval_keys:
+                print('{}: {}'.format(i, v[i]))
+
+
+
+
+
     print('************************************************\n')
     # Processing
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(list(map(str, args.gpus)))
@@ -57,7 +71,11 @@ def main():
         print('Finish visualizing!')
 
     else:
-        p = Processor(args)
+
+        if args.baseline:
+            p = Processor_BS(args)
+        else:
+            p = Processor(args)
         p.start()
 
 
@@ -116,6 +134,7 @@ def Init_parameters():
     parser.add_argument('--max_epoch', '-me', type=int, default=50, help='max training epoch')
     parser.add_argument('--learning_rate', '-lr', type=int, default=0.1, help='initial learning rate')
     parser.add_argument('--adjust_lr', '-al', type=int, nargs='+', default=[10, 30], help='divide learning rate by 10')
+    parser.add_argument('--baseline', '-bl', default=False, action='store_true')
 
     return parser
 
