@@ -171,7 +171,7 @@ class Processor_BS():
         if self.args.evaluate:
             # Loading evaluating model
             print('Loading evaluating model ...')
-            checkpoint = U.load_checkpoint(self.model_name)
+            checkpoint = U.load_checkpoint(self.args.tag, self.model_name)
             self.model.module.load_state_dict(checkpoint['model'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
             print('Successful!\n')
@@ -188,7 +188,7 @@ class Processor_BS():
             start_epoch, best_acc = 0, 0
             if self.args.resume:
                 print('Loading checkpoint ...')
-                checkpoint = U.load_checkpoint()
+                checkpoint = U.load_checkpoint(self.args.tag)
                 self.model.module.load_state_dict(checkpoint['model'])
                 self.optimizer.load_state_dict(checkpoint['optimizer'])
                 start_epoch = checkpoint['epoch']

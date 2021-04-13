@@ -23,9 +23,8 @@ def check_gpu(gpus):
         return torch.device('cpu')
 
 
-def load_checkpoint(fname='checkpoint'):
-    fpath = './models/' + fname + '.pth.tar'
-    # fpath = './models/checkpoint.pth.tar'
+def load_checkpoint(tag, fname='checkpoint'):
+    fpath = f'./models/{tag}/' + fname + '.pth.tar'
     print('>>>>>> loading', fpath)
     if os.path.isfile(fpath):
         checkpoint = torch.load(fpath)
@@ -36,15 +35,16 @@ def load_checkpoint(fname='checkpoint'):
         raise ValueError('Do NOT exist this checkpoint: {}'.format(fname))
 
 
-def save_checkpoint(model, optimizer, epoch, best, is_best, model_name):
-    if not os.path.exists('./models'):
-        os.mkdir('./models')
+def save_checkpoint(model, optimizer, epoch, best, is_best, model_name,tag):
+    export_path = f'./models{tag}'
+    if not os.path.exists(export_path):
+        os.mkdir(export_path)
     for key in model.keys():
         model[key] = model[key].cpu()
     checkpoint = {'model':model, 'optimizer':optimizer, 'epoch':epoch, 'best':best}
-    torch.save(checkpoint, './models/checkpoint.pth.tar')
+    torch.save(checkpoint, export_path+'/checkpoint.pth.tar')
     if is_best:
-        shutil.copy('./models/checkpoint.pth.tar', './models/' + model_name + '.pth.tar')
+        shutil.copy(export_path+'/checkpoint.pth.tar', export_path+'/' + model_name + '.pth.tar')
 
 
 def str2bool(v):

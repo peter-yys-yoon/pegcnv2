@@ -21,7 +21,7 @@ class RA_GCN(nn.Module):
         # load pretrained baseline
         if pretrained:
             for stgcn in self.stgcn_stream:
-                checkpoint = U.load_checkpoint('baseline_NTU' + subset)
+                checkpoint = U.load_checkpoint(self.args.tag, 'baseline_NTU' + subset)
                 stgcn.load_state_dict(checkpoint['model'])
                 # stgcn.module.load_state_dict(checkpoint['model'])
 

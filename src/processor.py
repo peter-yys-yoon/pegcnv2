@@ -179,7 +179,7 @@ class Processor():
         if self.args.evaluate:
             # Loading evaluating model
             print('Loading evaluating model ...')
-            checkpoint = U.load_checkpoint(self.model_name)
+            checkpoint = U.load_checkpoint(self.args.tag, self.model_name)
             self.model.module.load_state_dict(checkpoint['model'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
             print('Successful!\n')
@@ -196,7 +196,7 @@ class Processor():
             start_epoch, best_acc = 0, 0
             if self.args.resume:
                 print('Loading checkpoint ...')
-                checkpoint = U.load_checkpoint()
+                checkpoint = U.load_checkpoint(self.args.tag)
                 self.model.module.load_state_dict(checkpoint['model'])
                 self.optimizer.load_state_dict(checkpoint['optimizer'])
                 start_epoch = checkpoint['epoch']
@@ -238,7 +238,7 @@ class Processor():
                     model_dict = self.model.state_dict()
 
                 U.save_checkpoint(model_dict, self.optimizer.state_dict(),
-                        epoch+1, best_acc, is_best, self.model_name)
+                        epoch+1, best_acc, is_best, self.model_name,self.args.tag)
 
             print('Finish training!')
             print('Best accuracy: {:2.2f}%, Total time: {:.4f}s'.format(best_acc, time.time()-start_time))

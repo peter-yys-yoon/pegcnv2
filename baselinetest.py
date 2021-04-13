@@ -25,9 +25,9 @@ checkpoint = torch.load('./models/baseline_NTUcset.pth.tar')
 
 # a = ST_GCN((3,300,25,2), 60, A, 0.5, gcn_kernel_size)
 # a = nn.DataParallel(a)
-# checkpoint = torch.load('./models/org/baseline_NTUcset.pth.tar')
 
-# checkpoint = torch.load('/home/peter/workspace/projects/1.closed/ECCV20/st-gcn/models/st_gcn.ntu-xsub.pt')
+
+
 # a.load_state_dict(checkpoint['model'])
 # a.module.load_state_dict(checkpoint)
 # a.module.load_state_dict(checkpoint['model'])
