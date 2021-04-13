@@ -61,7 +61,7 @@ class Processor():
         # Model Setting
         self.model_name = str(args.config)+'_'+str(args.model_stream)+'s_RA-GCN_NTU'+args.subset
         self.model = RA_GCN(data_shape, num_class, A, args.drop_prob, args.gcn_kernel_size,
-            args.model_stream, args.subset, args.pretrained).to(self.device)
+            args.model_stream, args.subset, args.pretrained, args.tag).to(self.device)
 
         self.model = nn.DataParallel(self.model)
 

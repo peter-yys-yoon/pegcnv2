@@ -6,7 +6,7 @@ import src.utils as U
 
 
 class RA_GCN(nn.Module):
-    def __init__(self, data_shape, num_class, A, drop_prob, gcn_kernel_size, model_stream, subset, pretrained):
+    def __init__(self, data_shape, num_class, A, drop_prob, gcn_kernel_size, model_stream, subset, pretrained,tag):
         super().__init__()
 
         C, T, V, M = data_shape
@@ -21,7 +21,7 @@ class RA_GCN(nn.Module):
         # load pretrained baseline
         if pretrained:
             for stgcn in self.stgcn_stream:
-                checkpoint = U.load_checkpoint(self.args.tag, 'baseline_NTU' + subset)
+                checkpoint = U.load_checkpoint(tag, 'baseline_NTU' + subset)
                 stgcn.load_state_dict(checkpoint['model'])
                 # stgcn.module.load_state_dict(checkpoint['model'])
 
