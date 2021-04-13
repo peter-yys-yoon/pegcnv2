@@ -33,7 +33,7 @@ def main():
     elif node =='puma':
         args.gpus=[0]
     else:
-        args.gpus=[0,1]
+        args.gpus=[0]
 
     #if type(args.gpus) == int:
     #    n = args.gpus
@@ -55,8 +55,9 @@ def main():
     if args.evaluate:
         for i in v.keys():
             if i in print_eval_keys:
-                print('{}: {}'.format(i, v[i]))
-
+                if v[i]:		
+                    print('{}: {}'.format(i, v[i]))
+    #quit()
 
 
 
