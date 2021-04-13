@@ -36,7 +36,7 @@ def load_checkpoint(tag, fname='checkpoint'):
 
 
 def save_checkpoint(model, optimizer, epoch, best, is_best, model_name,tag):
-    export_path = f'./models{tag}'
+    export_path = f'./models/{tag}'
     if not os.path.exists(export_path):
         os.mkdir(export_path)
     for key in model.keys():

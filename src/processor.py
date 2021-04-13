@@ -27,6 +27,11 @@ class Processor():
         torch.cuda.manual_seed_all(args.seed)
         cudnn.benchmark = True
         self.device = U.check_gpu(args.gpus)
+        if platform.node() =='obama':
+            num_worker= 8
+        else:
+            num_worker = 32
+        	
 
         # Data Loader Setting
         if args.subset in ['cs', 'cv']:
@@ -46,10 +51,10 @@ class Processor():
             Jittering_frame(args.jittering_frame, data_shape, sigma=args.sigma),
         ])
         self.train_loader = DataLoader(NTU('train', args.subset, data_shape, transform=transform),
-                                       batch_size=args.batch_size, num_workers=2*len(args.gpus),
+                                       batch_size=args.batch_size, num_workers=num_worker,
                                        pin_memory=True, shuffle=True, drop_last=True)
         self.eval_loader = DataLoader(NTU('eval', args.subset, data_shape, transform=transform),
-                                      batch_size=args.batch_size, num_workers=2*len(args.gpus),
+                                      batch_size=args.batch_size, num_workers=num_worker,
                                       pin_memory=True, shuffle=False, drop_last=False)
         if args.data_transform:
             data_shape = (9, args.max_frame, 25, 2)
