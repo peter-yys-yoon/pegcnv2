@@ -1,13 +1,14 @@
 import os
 import yaml
 import argparse
-
+import sys
 import src.utils as U
 from src.processor import Processor
 from src.processor_bs import Processor_BS
 from src.visualizer import Visualizer
+import platform
 
-
+node = platform.node()
 def main():
     parser = Init_parameters()
 
@@ -23,17 +24,23 @@ def main():
             parser.set_defaults(**yaml_arg)
     else:
         raise ValueError('Do NOT exist this config: {}'.format(args.config))
-
     # Update parameters by cmd
     args = parser.parse_args()
     # Show parameters
     print('\n************************************************')
-    if type(args.gpus) == int:
-        n = args.gpus
-        if n == 4:
-            args.gpus = [0, 1, 2, 3]
-        else:
-            args.gpus = [0]
+    if node =='obama':
+        args.gpus = [0,1,2,3]
+    elif node =='puma':
+        args.gpus=[0]
+    else:
+        args.gpus=[0,1]
+
+    #if type(args.gpus) == int:
+    #    n = args.gpus
+    #    if n == 4:
+    #        args.gpus = [0, 1, 2, 3]
+    #    else:
+    #        args.gpus = [0]
 
     print('The running config is presented as follows:')
     print_default_keys = ['config', 'batch_size', 'pretrained', 'model_stream', 'gpus']
@@ -135,6 +142,7 @@ def Init_parameters():
     parser.add_argument('--learning_rate', '-lr', type=int, default=0.1, help='initial learning rate')
     parser.add_argument('--adjust_lr', '-al', type=int, nargs='+', default=[10, 30], help='divide learning rate by 10')
     parser.add_argument('--baseline', '-bl', default=False, action='store_true')
+    parser.add_argument('--tag', '-t', type=str, required=True)
 
     return parser
 

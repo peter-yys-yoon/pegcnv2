@@ -1,9 +1,20 @@
 import os
+import platform
+node = platform.node()
 
-
-def main():
+if node =='obama':
     folder1 = '/home/peter/workspace/dataset/NTURGB+D60/skeletons/'
     folder2 = '/home/peter/workspace/dataset/NTURGB+D120/skeletons/'
+elif node=='puma':
+    folder1 =''
+    folder2 =''
+else:
+    folder1='/home/work/data/ntu60'
+    folder2='/home/work/data/ntu120'
+
+def main():
+    #folder1 = '/home/peter/workspace/dataset/NTURGB+D60/skeletons/'
+    #folder2 = '/home/peter/workspace/dataset/NTURGB+D120/skeletons/'
     gen_ntu60(folder1)
     gen_ntu120(folder1, folder2)
 
