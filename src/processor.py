@@ -15,6 +15,7 @@ from src.nets import RA_GCN
 from src.mask import Mask
 from tqdm import tqdm
 from collections import OrderedDict
+import platform
 
 class Processor():
     def __init__(self, args):
@@ -31,7 +32,6 @@ class Processor():
             num_worker= 8
         else:
             num_worker = 32
-        	
 
         # Data Loader Setting
         if args.subset in ['cs', 'cv']:
