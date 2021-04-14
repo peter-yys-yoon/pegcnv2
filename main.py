@@ -28,12 +28,6 @@ def main():
     args = parser.parse_args()
     # Show parameters
     print('\n************************************************')
-    if node =='obama':
-        args.gpus = [0,1,2,3]
-    elif node =='puma':
-        args.gpus=[0]
-    else:
-        args.gpus=[0]
 
     #if type(args.gpus) == int:
     #    n = args.gpus
@@ -43,11 +37,22 @@ def main():
     #        args.gpus = [0]
 
     print('The running config is presented as follows:')
-    print_default_keys = ['config', 'batch_size', 'pretrained', 'model_stream', 'gpus']
+    print_default_keys = ['config', 'batch_size', 'pretrained', 'model_stream']
     print_eval_keys = ['occlusion_part', 'occlusion_time', 'occlusion_block', 'occlusion_rand',
                        'jittering_joint', 'jittering_frame', 'sigma']
 
     v = vars(args)
+    if '-g' in sys.argv or '--gpus' in sys.argv:
+        aa = args.gpus
+        args.gpus = [ int(x) for x in aa.split(',')]
+    else:
+        if node =='obama':
+            args.gpus = [0,1,2,3]
+        elif node =='puma':
+            args.gpus=[0]
+        else:
+            args.gpus=[0]
+
     for i in v.keys():
         if i in print_default_keys:
             print('{}: {}'.format(i, v[i]))
@@ -57,9 +62,6 @@ def main():
             if i in print_eval_keys:
                 if v[i]:		
                     print('{}: {}'.format(i, v[i]))
-    #quit()
-
-
 
 
     print('************************************************\n')
@@ -102,7 +104,7 @@ def Init_parameters():
 
     # Program
     # parser.add_argument('--gpus', '-g', type=int, nargs='+', default=[], help='Using GPUs')
-    parser.add_argument('--gpus', '-g', type=int, default=0, help='Using GPUs')
+    parser.add_argument('--gpus', '-g', type=str, default='0', help='Using GPUs')
     parser.add_argument('--seed', '-s', type=int, default=1, help='Random seed')
 
     # Visualization
