@@ -1,6 +1,8 @@
 import time
 import torch
 import numpy as np
+import os
+
 from torch.backends import cudnn
 from torch import nn
 from torch.nn import functional as F
@@ -16,6 +18,7 @@ from src.mask import Mask
 from tqdm import tqdm
 from collections import OrderedDict
 import platform
+import yaml
 
 class Processor():
     def __init__(self, args):
@@ -176,6 +179,16 @@ class Processor():
         name_desc.close()
         return acc / num_sample * 100
 
+
+    def save_arg(self):
+        # save arg
+        arg_dict = vars(self.args)
+        export_path = f'./models/{self.args.tag}'
+
+        if not os.path.exists(self.args.model_saved_name):
+            os.makedirs(self.args.model_saved_name)
+        with open('{}/config.yaml'.format(export_path), 'w') as f:
+            yaml.dump(arg_dict, f)
 
     def start(self):
         # Training Start
