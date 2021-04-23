@@ -4,6 +4,9 @@ import pynvml
 import torch
 import numpy as np
 import math
+import time
+import yaml
+
 
 def check_gpu(gpus):
     if len(gpus) > 0 and torch.cuda.is_available():
@@ -35,16 +38,44 @@ def load_checkpoint(tag, fname='checkpoint'):
         raise ValueError('Do NOT exist this checkpoint: {}'.format(fname))
 
 
-def save_checkpoint(model, optimizer, epoch, best, is_best, model_name,tag):
+def save_arg(args):
+    # save arg
+    arg_dict = vars(args)
+    export_path = f'./models/{args.tag}'
+
+    if not os.path.exists(export_path):
+        os.makedirs(export_path)
+    with open('{}/config.yaml'.format(export_path), 'w') as f:
+        yaml.dump(arg_dict, f)
+
+
+def print_log_train(tag, given, print_time=True):
+    export_path = f'./models/{tag}/train_log.txt'
+    timestamp = time.strftime("[%m.%d.%y|%X] ", time.localtime())
+    with open(export_path, 'a') as f:
+        print(timestamp + ' ' + given, file=f)
+
+
+def print_log_eval(tag, given, print_time=True):
+    export_path = f'./models/{tag}/eval_log.txt'
+
+    timestamp = time.strftime("[%m.%d.%y|%X] ", time.localtime())
+
+    aa = [timestamp] + given
+    with open(export_path, 'a') as f:
+        print(aa.joint(';'), file=f)
+
+
+def save_checkpoint(model, optimizer, epoch, best, is_best, model_name, tag):
     export_path = f'./models/{tag}'
     if not os.path.exists(export_path):
         os.mkdir(export_path)
     for key in model.keys():
         model[key] = model[key].cpu()
-    checkpoint = {'model':model, 'optimizer':optimizer, 'epoch':epoch, 'best':best}
-    torch.save(checkpoint, export_path+'/checkpoint.pth.tar')
+    checkpoint = {'model': model, 'optimizer': optimizer, 'epoch': epoch, 'best': best}
+    torch.save(checkpoint, export_path + '/checkpoint.pth.tar')
     if is_best:
-        shutil.copy(export_path+'/checkpoint.pth.tar', export_path+'/' + model_name + '.pth.tar')
+        shutil.copy(export_path + '/checkpoint.pth.tar', export_path + '/' + model_name + '.pth.tar')
 
 
 def str2bool(v):
@@ -54,6 +85,7 @@ def str2bool(v):
         return False
     else:
         raise ValueError('Cannot recognize the input parameter {}'.format(v))
+
 
 def angle_between(v1, v2):
     """ Returns the angle in radians between vectors 'v1' and 'v2'::
@@ -89,9 +121,11 @@ def z_rotation(vector, theta):
     R = np.array([[np.cos(theta), -np.sin(theta), 0], [np.sin(theta), np.cos(theta), 0], [0, 0, 1]])
     return np.dot(R, vector)
 
+
 def unit_vector(vector):
     """ Returns the unit vector of the vector.  """
     return vector / np.linalg.norm(vector)
+
 
 def rotation_matrix(axis, theta):
     """

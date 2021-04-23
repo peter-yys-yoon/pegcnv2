@@ -15,6 +15,7 @@ from src.dataprocessor import *
 from src.graph import Graph
 from src.nets import RA_GCN
 from src.mask import Mask
+from src.utils import print_log_train, print_log_eval
 from tqdm import tqdm
 from collections import OrderedDict
 import platform
@@ -178,17 +179,6 @@ class Processor():
                 # print('Batch: {}/{}'.format(num+1, len(self.eval_loader)))
         name_desc.close()
         return acc / num_sample * 100
-
-
-    def save_arg(self):
-        # save arg
-        arg_dict = vars(self.args)
-        export_path = f'./models/{self.args.tag}'
-
-        if not os.path.exists(self.args.model_saved_name):
-            os.makedirs(self.args.model_saved_name)
-        with open('{}/config.yaml'.format(export_path), 'w') as f:
-            yaml.dump(arg_dict, f)
 
     def start(self):
         # Training Start
