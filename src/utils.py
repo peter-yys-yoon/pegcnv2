@@ -63,7 +63,7 @@ def print_log_eval(tag, given, print_time=True):
 
     aa = [timestamp] + given
     with open(export_path, 'a') as f:
-        print(aa.joint(';'), file=f)
+        print(';'.join(aa), file=f)
 
 
 def save_checkpoint(model, optimizer, epoch, best, is_best, model_name, tag):

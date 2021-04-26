@@ -2,7 +2,7 @@ import time
 import torch
 import numpy as np
 import os
-
+from sys import argv
 from torch.backends import cudnn
 from torch import nn
 from torch.nn import functional as F
@@ -187,6 +187,18 @@ class Processor():
         if self.args.evaluate:
             # Loading evaluating model
             print('Loading evaluating model ...')
+            print(argv)
+            aa = ["-op","-ot","-ob","-or","-jj","-jf"]
+            ss = [ self.args.occlusion_part, self.args.occlusion_time, self.args.occlusion_block,self.args.occlusion_rand, self.args.jittering_joint,self.args.jittering_frame]
+            bb =[]
+            for idx, op in enumerate(aa):
+                if op in argv:
+                    bb.append(op[1:])
+                    bb.append(str(ss[idx]))
+                    if idx >3:
+                        bb.append(self.args.sigma)
+                    else:
+                        bb.append(' ')
             checkpoint = U.load_checkpoint(self.args.tag, self.model_name)
             self.model.module.load_state_dict(checkpoint['model'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
@@ -196,6 +208,8 @@ class Processor():
             print('Starting evaluating ...')
             self.model.module.eval()
             acc = self.eval()
+            bb.append(f'{acc:.2f}')
+            print_log_eval(self.args.tag, bb) 
             print('Finish evaluating!')
             print('Best accuracy: {:2.2f}%, Total time:{:.4f}s'.format(acc, time.time()-start_time))
 
