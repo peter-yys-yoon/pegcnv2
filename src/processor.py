@@ -33,7 +33,7 @@ class Processor():
         cudnn.benchmark = True
         self.device = U.check_gpu(args.gpus)
         if platform.node() =='obama':
-            num_worker= 8
+            num_worker= 32
         else:
             num_worker = 32
 
@@ -196,7 +196,7 @@ class Processor():
                     bb.append(op[1:])
                     bb.append(str(ss[idx]))
                     if idx >3:
-                        bb.append(self.args.sigma)
+                        bb.append(str(self.args.sigma))
                     else:
                         bb.append(' ')
             checkpoint = U.load_checkpoint(self.args.tag, self.model_name)
